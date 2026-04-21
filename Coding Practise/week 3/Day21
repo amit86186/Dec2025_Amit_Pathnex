@@ -1,0 +1,31 @@
+provider "aws" {
+ region = "ap-south-1"
+}
+resource "aws_instance" "myserver1" {
+ ami           = "ami-0f12345678b123" #Aws Linux
+ instance_type = "t2.micro"
+
+tags = {
+ Name = "terraform-server"
+  }
+}
+
+
+# creating 10 ec2 server on teeraform by using count_meta argument. 
+provider "aws" {
+  region = "ap-south-1"
+}
+
+resource "aws_instance" "example" {
+  count         = 10
+  ami           = "ami-0f5ee92e2d63afc18"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "Server-${count.index}"
+  }
+}
+
+# ======== END THE CODE =======================
+
+
