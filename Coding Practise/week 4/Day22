@@ -1,4 +1,4 @@
-# creating s3 bucket via teeraform 
+# creating s3 bucket via teraform 
 
 provider "aws" {
   region = "ap-south-1" #mumbai =region
