@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo 'Code checkout done'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                python -m pip install --upgrade pip
+                pip install pytest
+                pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'pytest'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'zip -r lambda.zip lambda_function.py'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline Success ✅'
+        }
+        failure {
+            echo 'Pipeline Failed ❌'
+        }
+    }
+}
