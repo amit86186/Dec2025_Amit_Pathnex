@@ -1,0 +1,15 @@
+#!/bin/bash
+
+echo "===== System Monitoring ====="
+
+CPU=$(uptime | awk -F'load average:' '{print $2}')
+df -h / | awk '{print $5}' | tail -1
+echo "CPU Load:$CPU"
+
+MEMORY=$(cat /proc/meminfo | grep MemAvailable)
+echo "$MEMORY"
+
+DISK=$(df -h / | awk 'NR==2 {print $5}')
+echo "Disk Usage: $DISK"
+
+echo "============================="
