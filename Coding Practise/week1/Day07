@@ -1,0 +1,23 @@
+#ansible playbook
+
+--
+-name: Install Nginx Web Server  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Install Nginx
+      yum:
+        name: nginx
+        state: present
+
+    - name: Start Nginx Service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+========================end================================================
+
+
+
+
