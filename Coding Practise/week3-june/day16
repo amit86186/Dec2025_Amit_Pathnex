@@ -1,0 +1,54 @@
+# deploy a node.js application 
+
+#!/bin/bash
+
+set -e
+
+echo "Starting deployment..."
+
+# Go to application directory
+cd /opt/myapp
+
+# Pull latest code
+git pull origin main
+
+# Install dependencies
+npm install
+
+# Build application
+npm run build
+
+# Restart service
+sudo systemctl restart myapp
+
+echo "Deployment completed successfully."
+  
+
+
+#deploy a docker application  
+
+#!/bin/bash
+
+set -e
+
+echo "Pulling latest image..."
+
+docker pull myregistry.azurecr.io/myapp:latest
+
+echo "Stopping old container..."
+
+docker stop myapp || true
+docker rm myapp || true
+
+echo "Starting new container..."
+
+docker run -d \
+  --name myapp \
+  -p 80:8080 \
+  myregistry.azurecr.io/myapp:latest
+
+echo "Deployment completed.
+"
+
+
+
