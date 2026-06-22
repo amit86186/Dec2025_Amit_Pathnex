@@ -1,0 +1,73 @@
+provider "aws" {
+  region = "ap-south-1"
+}
+
+resource "aws_instance" "web" {
+  ami           = "ami-0f58b397bc5c1f2e8"  # Amazon Linux 2023
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "dev-server"
+  }
+ }
+
+
+ # production example 
+
+ resource "aws_instance" "web" {
+  ami                    = "ami-0f58b397bc5c1f2e8"
+  instance_type          = "m5.large"
+  key_name               = "my-key"
+
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
+  subnet_id              = aws_subnet.public.id
+
+  tags = {
+    Name = "prod-web-server"
+    Environment = "Production"
+  }
+}
+
+
+
+# production example for s3 bucket 
+
+resource "aws_s3_bucket" "prod_bucket" {
+  bucket = "amit-prod-tf-state-bucket"
+
+  tags = {
+    Name = "Terraform-State"
+    Environment = "Production"
+  }
+}
+
+resource "aws_s3_bucket_versioning" "versioning" {
+  bucket = aws_s3_bucket.prod_bucket.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "encryption" {
+  bucket = aws_s3_bucket.prod_bucket.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "block" {
+  bucket = aws_s3_bucket.prod_bucket.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+
+
+==============================================end========================================
